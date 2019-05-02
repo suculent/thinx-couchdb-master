@@ -1,0 +1,15 @@
+version: '3.1'
+
+services:
+
+  couchdb:
+    image: apache/couchdb:3.2.1
+#    image: suculent/thinx-couchdb-master
+    ports:
+      - 5984:5984
+    environment:
+      - COUCHDB_ADMIN=${COUCHDB_ADMIN}
+      - COUCHDB_PASS=${COUCHDB_PASS}
+      - NODENAME=${NODENAME}
+    volumes:
+      - /mnt/data/couchdb:/opt/couchdb/data

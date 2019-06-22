@@ -1,15 +1,27 @@
 version: '3.1'
 
+networks:
+  internal:
+    external: false
+  nat:
+    external: true
+
 services:
 
   couchdb:
-    image: apache/couchdb:3.2.1
+    env_file: .env
+    image: apache/couchdb:2.3.1
 #    image: suculent/thinx-couchdb-master
     ports:
-      - 5984:5984
+      - 5984:5984 # not required for production
     environment:
       - COUCHDB_ADMIN=${COUCHDB_ADMIN}
       - COUCHDB_PASS=${COUCHDB_PASS}
       - NODENAME=${NODENAME}
+      - COUCHDB_USER=${COUCHDB_ADMIN}
+      - COUCHDB_PASSWORD=${COUCHDB_PASS}
     volumes:
       - /mnt/data/couchdb:/opt/couchdb/data
+    networks:
+      nat:
+      internal:

@@ -1,15 +1,38 @@
 version: '3.1'
 
+networks:
+  nat:
+    external: true
+  internal:
+    external: false
+    ipam:
+      config:
+        - subnet: 172.31.0.0/16
+
 services:
 
   couchdb:
-    image: apache/couchdb:3.2.1
+    env_file: .env
+    image: apache/couchdb:2.3.1
 #    image: suculent/thinx-couchdb-master
     ports:
       - 5984:5984
+    restart: always
     environment:
       - COUCHDB_ADMIN=${COUCHDB_ADMIN}
       - COUCHDB_PASS=${COUCHDB_PASS}
       - NODENAME=${NODENAME}
+      - COUCHDB_USER=${COUCHDB_ADMIN}
+      - COUCHDB_PASSWORD=${COUCHDB_PASS}
     volumes:
       - /mnt/data/couchdb:/opt/couchdb/data
+    networks:
+      nat:
+      internal:
+#        ipv4_address: 172.31.0.31
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=couchdb"
+      - "traefik.frontend.rule=Host:kgr-db.thinx.cloud"
+      - "traefik.frontend.entryPoints=http,https"
+      - "traefik.frontend.auth.basic.users=admin:$$apr1$$el6sNCbl$$9ed5rmMcqGURmGarTNcdY."

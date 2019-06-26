@@ -29,10 +29,3 @@ services:
     networks:
       nat:
       internal:
-#        ipv4_address: 172.31.0.31
-    labels:
-      - "traefik.enable=true"
-      - "traefik.backend=couchdb"
-      - "traefik.frontend.rule=Host:kgr-db.thinx.cloud"
-      - "traefik.frontend.entryPoints=http,https"
-      - "traefik.frontend.auth.basic.users=admin:$$apr1$$el6sNCbl$$9ed5rmMcqGURmGarTNcdY."

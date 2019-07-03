@@ -2,6 +2,9 @@ FROM debian:stretch-slim
 
 MAINTAINER CouchDB Developers dev@couchdb.apache.org
 
+ARG COUCHDB_USER
+ARG COUCHDB_PASSWORD
+
 # Add CouchDB user account to make sure the IDs are assigned consistently
 RUN groupadd -g 5984 -r couchdb && useradd -u 5984 -d /opt/couchdb -g couchdb couchdb
 
@@ -108,13 +111,15 @@ ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
 
 # Setup directories and permissions
 RUN chown -R couchdb:couchdb /opt/couchdb/etc/default.d/ /opt/couchdb/etc/vm.args
-#VOLUME /opt/couchdb/data /opt/couchdb/data
+VOLUME /opt/couchdb/data /opt/couchdb/data
+
+# RUN echo "-name couchdb@127.0.0.1" > /etc/vm.args
 
 # 5984: Main CouchDB endpoint
 # 4369: Erlang portmap daemon (epmd)
 # 9100: CouchDB cluster communication port
 EXPOSE 5984
-EXPOSE 4369
-EXPOSE 9100
+# EXPOSE 4369
+# EXPOSE 9100
 
 CMD ["/opt/couchdb/bin/couchdb"]

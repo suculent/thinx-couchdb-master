@@ -1,15 +1,27 @@
-version: '3.1'
+version: '3.2'
+
+networks:
+  nat:
+    external: true
+  internal:
+    external: false
 
 services:
 
+# should not be exposed to outside world; replication should go from master to slave!
+
   couchdb:
-    image: apache/couchdb:3.2.1
-#    image: suculent/thinx-couchdb-master
+    image: suculent/thinx-couchdb-master
+    restart: always
     ports:
       - 5984:5984
+    networks:
+      - nat
+      - internal
     environment:
-      - COUCHDB_ADMIN=${COUCHDB_ADMIN}
-      - COUCHDB_PASS=${COUCHDB_PASS}
+      - COUCHDB_USER=${COUCHDB_ADMIN}
+      - COUCHDB_PASSWORD=${COUCHDB_PASS}
       - NODENAME=${NODENAME}
     volumes:
+      - /mnt/data/couchdb:/var/lib/couchdb
       - /mnt/data/couchdb:/opt/couchdb/data
